@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UserInfo } from 'src/user-registry/auth/constants/user-info';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { Location, LocationDocument } from './schemas/location.schema';
@@ -22,17 +23,40 @@ export class LocationService {
 
   async findAll(): Promise<Location []> {
     const locations = await this.locationModel.find().exec();
-    return locations.map((location) => new Location(location.toJSON()));
+    if (locations) {
+      return locations.map((location) => new Location(location.toJSON()));
+    }
   }
+
+  async findForOwner(userInfo: UserInfo): Promise<Location []> {
+    const locations = await this.locationModel.find({owner: userInfo.userId}).exec();
+    if (locations) {
+      return locations.map((location) => new Location(location.toJSON()));
+    }
+  }
+   
 
   async findOne(id: string): Promise<Location>  {
     const location = await this.locationModel.findOne({_id: id}).exec();
-    return new Location(location.toJSON());
+    if (location) {
+      return new Location(location.toJSON());
+    }
+  }
+
+  async findOneForOwner(id: string, userInfo: UserInfo): Promise<Location>  {
+    const location = await this.locationModel.findOne({_id: id, owner: userInfo.userId}).exec();
+    if (location) {
+      return new Location(location.toJSON());
+    }
   }
 
   async update(id: string, updateLocationDto: UpdateLocationDto): Promise<Location> {
-    const location = await this.locationModel.findByIdAndUpdate(id, updateLocationDto).exec();
-    return new Location(location.toJSON());
+    console.log("update location", updateLocationDto);
+    const options = {upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
+    const location = await this.locationModel.findByIdAndUpdate(id, updateLocationDto, options).exec();
+    if (location) {
+      return new Location(location.toJSON());
+    }
   }
 
   async remove(id: string): Promise<void>  {
