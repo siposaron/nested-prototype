@@ -1,16 +1,19 @@
+import { ApiProperty, ApiHideProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, SchemaTypes } from "mongoose";
 import { Exclude, Expose, Transform } from "class-transformer";
 import { IsOptional } from "class-validator";
-import { User } from "src/user-registry/schemas/user.schema";
 
 class BaseDocument {
+
+  @ApiProperty({ name: "id" })
   @Expose({ name: "id" })
   @Transform((value) => value && value.toString())
   @IsOptional()
   @Prop()
   _id: string;
 
+  @ApiHideProperty()
   @Exclude()
   @Prop()
   __v: number;
@@ -20,9 +23,11 @@ class Address {
   @Prop()
   addressLine1: string;
 
+  @ApiPropertyOptional()
   @Prop()
   addressLine2: string;
 
+  @ApiPropertyOptional()
   @Prop()
   zip: string;
 
@@ -51,22 +56,28 @@ export class Location extends BaseDocument {
   @Prop()
   name: string;
 
+  @ApiPropertyOptional()
   @Prop()
   type: string;
 
+  @ApiPropertyOptional()
   @Prop()
   servicesOffered: string;
 
+  @ApiPropertyOptional()
   @Prop(Address)
   address: Address;
 
+  @ApiPropertyOptional()
   @Prop([Contact])
   contacts: Contact[];
 
+  @ApiHideProperty()
   @Exclude()
   @Prop({ default: false })
   archived: boolean;
 
+  @ApiHideProperty()
   @Exclude()
   @Prop(Date)
   createdOn: Date;

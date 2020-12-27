@@ -17,5 +17,6 @@ services:
     environment:
       MONGO_URL: mongodb://mongo:27017/nested
       PORT: 3000
+      AUTH_SECRET: s3cr3t
 volumes:
   mongodb:

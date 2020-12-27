@@ -1,16 +1,19 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { ApiProperty, ApiHideProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Document } from "mongoose";
 import { Exclude, Expose, Transform } from "class-transformer";
 import { IsOptional } from "class-validator";
 import { Role } from "../auth/constants/user-info";
 
 class BaseDocument {
+  @ApiProperty({ name: "id" })
   @Expose({ name: "id" })
   @Transform((value) => value && value.toString())
   @IsOptional()
   @Prop()
   _id: string;
 
+  @ApiHideProperty()
   @Exclude()
   @Prop()
   __v: number;
@@ -35,6 +38,7 @@ export class User extends BaseDocument {
   })
   roles: string[];
 
+  @ApiHideProperty()
   @Exclude()
   @Prop(Date)
   createdOn: Date;

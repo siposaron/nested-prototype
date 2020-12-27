@@ -5,7 +5,6 @@ import {
   Body,
   Put,
   Param,
-  Request,
   Delete,
   UseInterceptors,
   ClassSerializerInterceptor
@@ -14,7 +13,7 @@ import { LocationService } from "./location.service";
 import { CreateLocationDto } from "./dto/create-location.dto";
 import { UpdateLocationDto } from "./dto/update-location.dto";
 import { Roles } from "src/user-registry/auth/decorators/roles.decorator";
-import { Role, UserInfo } from "src/user-registry/auth/constants/user-info";
+import { Role } from "src/user-registry/auth/constants/user-info";
 import { AuthUserInfo } from "src/user-registry/auth/decorators/user-info.decorator";
 
 @Controller("api/locations")

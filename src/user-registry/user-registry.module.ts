@@ -28,7 +28,6 @@ import { AppLevelJwtGuard } from './auth/guards/jwt-auth.guard';
     UserService, AuthenticationService, 
     LocalStrategy, JwtStrategy, 
     AppLevelRolesGuard, AppLevelJwtGuard
-  ],
-  exports: [AuthenticationService]
+  ]
 })
-export class UserModule {}
+export class UserRegistryModule  {}

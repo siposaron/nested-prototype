@@ -17,6 +17,7 @@ Yarn 2 | Modern build tool
 - REST API endpoints
 - DTO validation
 - MongoDB schemas with DTO transformation
+- Swagger doc for REST API endpoints
   
 ## 2. RUNNING THE APP
 
@@ -48,3 +49,16 @@ Start:
 
 Stop:
 `CMD+C` / `CTRL+C`
+
+### 2.3 Overwrite default env variables
+
+Env variable | Default value
+--- | ---
+MONGO_URL | mongodb://localhost:27017/nested
+PORT | 3000
+AUTH_SECRET | s3cr3t
+
+These variables can be overwritten either locally or in docker-compose.yml.
+## 3. ACCESS APP DOC
+
+[localhost:3000/api-doc](http://localhost:3000/api-doc)

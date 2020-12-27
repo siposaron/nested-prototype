@@ -1,16 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserInfo } from "./constants/user-info";
+import { TokenDto } from "./dto/token.dto";
 
 @Injectable()
 export class AuthenticationService {
   constructor(private jwtService: JwtService) {}
 
-  async login(user: UserInfo) {
+  async login(user: UserInfo): Promise<TokenDto> {
     const payload = { sub: user.userId, scope: user.roles };
     return {
       access_token: this.jwtService.sign(payload)
-    };
+    } as TokenDto;
   }
 
   async verifyToken(token: string): Promise<boolean> {
