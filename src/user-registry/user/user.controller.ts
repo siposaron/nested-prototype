@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor
 } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse } from "@nestjs/swagger";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -22,18 +23,24 @@ import { AuthUserInfo } from "../auth/decorators/user-info.decorator";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiCreatedResponse({ description: "User registration" })
+  @ApiBadRequestResponse({ description: "Bad request" })
   @Public()
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
+  @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
   @Roles(Role.Admin)
   @Get()
   async findAll(@AuthUserInfo() userInfo) {
     return await this.userService.findAll();
   }
 
+  @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
   @Roles(Role.Admin, Role.Manager)
   @Get(":id")
   async findOne(@AuthUserInfo() userInfo: UserInfo, @Param("id") id: string) {
@@ -42,12 +49,17 @@ export class UserController {
     }
   }
 
+  @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
+  @ApiBadRequestResponse({ description: "Bad request" })
   @Roles(Role.Admin, Role.Manager)
   @Put(":id")
   async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
+  @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
   @Roles(Role.Admin)
   @Delete(":id")
   async remove(@Param("id") id: string) {

@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor
 } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse } from "@nestjs/swagger";
 import { LocationService } from "./location.service";
 import { CreateLocationDto } from "./dto/create-location.dto";
 import { UpdateLocationDto } from "./dto/update-location.dto";
@@ -18,15 +19,19 @@ import { AuthUserInfo } from "src/user-registry/auth/decorators/user-info.decora
 
 @Controller("api/locations")
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiBearerAuth()
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
+  @ApiBadRequestResponse({ description: "Bad request" })
   @Roles(Role.Admin, Role.Manager)
   @Post()
   async create(@Body() createLocationDto: CreateLocationDto) {
     return await this.locationService.create(createLocationDto);
   }
 
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
   @Roles(Role.Admin, Role.Manager)
   @Get()
   async findAll(@AuthUserInfo() userInfo) {
@@ -37,6 +42,7 @@ export class LocationController {
     }
   }
 
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
   @Roles(Role.Admin, Role.Manager)
   @Get(":id")
   async findOne(@AuthUserInfo() userInfo, @Param("id") id: string) {
@@ -47,12 +53,15 @@ export class LocationController {
     }
   }
 
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
+  @ApiBadRequestResponse({ description: "Bad request" })
   @Roles(Role.Admin, Role.Manager)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateLocationDto: UpdateLocationDto) {
     return await this.locationService.update(id, updateLocationDto);
   }
 
+  @ApiForbiddenResponse({ description: "Forbidden. Token is invalid." })
   @Roles(Role.Admin)
   @Delete(":id")
   async remove(@Param("id") id: string) {
